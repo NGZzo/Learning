@@ -112,7 +112,7 @@ to{transform:scale(1);opacity:1;}
 <script>
 
 /* ====== GANTI TANGGAL DISINI ====== */
-const startDate = new Date("2025-02-26T01:45:00");
+const startDate = new Date("2025-02-26T01:50:00");
 
 /* ====== LOVE TIMER ====== */
 function updateLoveTime(){
@@ -127,16 +127,20 @@ document.getElementById("seconds").textContent=Math.floor((diff/1000)%60);
 setInterval(updateLoveTime,1000);
 updateLoveTime();
 
-/* ====== ANNIVERSARY SYSTEM ====== */
-const annivDay=startDate.getDate();
-const annivMonth=startDate.getMonth();
-const today=new Date();
-const todayKey=today.toDateString();
-
+/* ====== ANNIVERSARY SYSTEM REALTIME ====== */
 let specialTitle="";
 let specialMessage="";
+let lastShownDate="";
 
 function checkSpecialDay(){
+
+const today = new Date();
+const todayKey = today.toDateString();
+const annivDay = startDate.getDate();
+const annivMonth = startDate.getMonth();
+
+/* prevent double popup */
+if(lastShownDate === todayKey) return;
 
 if(today.getDate()===annivDay && today.getMonth()===annivMonth){
 
@@ -149,6 +153,7 @@ Terima kasih sudah bertahan sejauh ini.
 I LOVEE YOUU BABEEE <3`;
 
 showPopup();
+lastShownDate=todayKey;
 }
 
 }else if(today.getDate()===annivDay){
@@ -162,6 +167,7 @@ specialMessage=`Babyy kita sudah ${months} bulan bersama hehehe :3
 I LOVEE YOUH SO MUCHH 💙`;
 
 showPopup();
+lastShownDate=todayKey;
 }
 }
 }
@@ -170,7 +176,6 @@ function showPopup(){
 document.getElementById("popupTitle").innerText=specialTitle;
 document.getElementById("popupMessage").innerText=specialMessage;
 document.getElementById("annivPopup").style.display="flex";
-localStorage.setItem("specialPopupShown",todayKey);
 }
 
 function closePopup(){
@@ -185,10 +190,9 @@ alert("Hari ini bukan Anniversary / Mensiversary yaa 💙");
 }
 }
 
-/* AUTO SHOW ON LOAD */
-if(localStorage.getItem("specialPopupShown")!==todayKey){
+/* CHECK TIAP MENIT */
+setInterval(checkSpecialDay,60000);
 checkSpecialDay();
-}
 
 </script>
 
