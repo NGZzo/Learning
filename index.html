@@ -64,6 +64,23 @@ border-radius:8px;
 cursor:pointer;
 }
 
+/* PASSWORD INPUT */
+.popup-content input{
+width:100%;
+padding:10px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ccc;
+outline:none;
+}
+
+.error-text{
+color:red;
+font-size:13px;
+display:none;
+margin-top:8px;
+}
+
 /* BUTTON OPEN AGAIN */
 .reopen-btn{
 position:fixed;
@@ -82,7 +99,6 @@ box-shadow:0 5px 15px rgba(0,0,0,0.3);
 from{transform:scale(0.8);opacity:0;}
 to{transform:scale(1);opacity:1;}
 }
-
 </style>
 </head>
 <body>
@@ -97,7 +113,7 @@ to{transform:scale(1);opacity:1;}
 </div>
 </div>
 
-<!-- POPUP -->
+<!-- ANNIVERSARY POPUP -->
 <div class="popup" id="annivPopup">
 <div class="popup-content">
 <h2 id="popupTitle"></h2>
@@ -106,13 +122,45 @@ to{transform:scale(1);opacity:1;}
 </div>
 </div>
 
+<!-- BIRTHDAY PASSWORD POPUP -->
+<div class="popup" id="birthdayPasswordPopup">
+<div class="popup-content">
+<h2>🎂 Birthday Access</h2>
+<p>Masukkan password dulu yaa babyy 😝</p>
+<input type="password" id="birthdayPasswordInput" placeholder="Enter password...">
+<div class="error-text" id="passwordError">Password salahhh 😜</div>
+<button onclick="checkBirthdayPassword()">Unlock 🎁</button>
+</div>
+</div>
+
+<!-- BIRTHDAY MESSAGE POPUP -->
+<div class="popup" id="birthdayMessagePopup">
+<div class="popup-content">
+<h2>🥳 HAPPY BIRTHDAYYY MY BABYYY 🎉</h2>
+<p>
+Selamat ulang tahun cintakuuu 💖✨<br><br>
+Semoga panjang umur, sehat selalu,  
+rezekinya lancar, makin glow up,  
+dan makin sayang sama aku tiap hari 😆💙<br><br>
+Hari ini kamu naik level yaa 🎮⬆️  
+Jangan lupa traktir pacarmu ini 😜
+</p>
+<button onclick="closeBirthday()">Close 💕</button>
+</div>
+</div>
+
 <!-- BUTTON REOPEN -->
 <button class="reopen-btn" onclick="openAgain()">🎉 Open Special Day</button>
 
 <script>
 
-/* ====== GANTI TANGGAL DISINI ====== */
+/* ====== GANTI TANGGAL JADIAN ====== */
 const startDate = new Date("2025-02-26T01:50:00");
+
+/* ====== SET TANGGAL ULANG TAHUN ====== */
+const birthdayMonth = 2;  // Ganti bulan (1-12)
+const birthdayDate = 26;  // Ganti tanggal
+const birthdayPassword = "2325"; // Ganti password
 
 /* ====== LOVE TIMER ====== */
 function updateLoveTime(){
@@ -127,7 +175,7 @@ document.getElementById("seconds").textContent=Math.floor((diff/1000)%60);
 setInterval(updateLoveTime,1000);
 updateLoveTime();
 
-/* ====== ANNIVERSARY SYSTEM REALTIME ====== */
+/* ====== ANNIVERSARY SYSTEM ====== */
 let specialTitle="";
 let specialMessage="";
 let lastShownDate="";
@@ -139,7 +187,6 @@ const todayKey = today.toDateString();
 const annivDay = startDate.getDate();
 const annivMonth = startDate.getMonth();
 
-/* prevent double popup */
 if(lastShownDate === todayKey) return;
 
 if(today.getDate()===annivDay && today.getMonth()===annivMonth){
@@ -151,7 +198,6 @@ specialTitle="🎉 Happy Anniversary babyy :3";
 specialMessage=`Akhirnya kita sudah ${years} tahun bersama 💖
 Terima kasih sudah bertahan sejauh ini.
 I LOVEE YOUU BABEEE <3`;
-
 showPopup();
 lastShownDate=todayKey;
 }
@@ -165,7 +211,6 @@ if(months>=1){
 specialTitle="💕 Happy Mensiversary babeee :3";
 specialMessage=`Babyy kita sudah ${months} bulan bersama hehehe :3
 I LOVEE YOUH SO MUCHH 💙`;
-
 showPopup();
 lastShownDate=todayKey;
 }
@@ -190,9 +235,32 @@ alert("Hari ini bukan Anniversary / Mensiversary yaa 💙");
 }
 }
 
-/* CHECK TIAP MENIT */
 setInterval(checkSpecialDay,60000);
 checkSpecialDay();
+
+/* ====== BIRTHDAY SYSTEM ====== */
+function checkBirthday(){
+const today=new Date();
+if(today.getMonth()+1===birthdayMonth && today.getDate()===birthdayDate){
+document.getElementById("birthdayPasswordPopup").style.display="flex";
+}
+}
+
+function checkBirthdayPassword(){
+const input=document.getElementById("birthdayPasswordInput").value;
+if(input===birthdayPassword){
+document.getElementById("birthdayPasswordPopup").style.display="none";
+document.getElementById("birthdayMessagePopup").style.display="flex";
+}else{
+document.getElementById("passwordError").style.display="block";
+}
+}
+
+function closeBirthday(){
+document.getElementById("birthdayMessagePopup").style.display="none";
+}
+
+checkBirthday();
 
 </script>
 
