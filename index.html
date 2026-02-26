@@ -5,85 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Selamat Ulang Tahun!</title>
 <style>
-    /* ===== FONT & RESET ===== */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Comic Sans MS', cursive, sans-serif;
-    }
+    /* ===== RESET & FONT ===== */
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Comic Sans MS', cursive, sans-serif; }
+    body { height:100vh; display:flex; justify-content:center; align-items:center; background: linear-gradient(135deg,#fbc2eb,#a6c1ee); overflow:hidden; position:relative; }
 
-    body {
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
-        overflow: hidden;
-        position: relative;
-    }
+    /* ===== BALON ===== */
+    .balloon { position:absolute; width:50px; height:70px; border-radius:50%; animation: float 6s infinite ease-in-out; opacity:0.8; }
+    @keyframes float { 0%{transform:translateY(0) rotate(0deg);} 50%{transform:translateY(-500px) rotate(180deg);} 100%{transform:translateY(0) rotate(360deg);} }
 
-    /* ===== BALON DAN CONFETTI ===== */
-    .balloon {
-        position: absolute;
-        width: 50px;
-        height: 70px;
-        background: red;
-        border-radius: 50% 50% 50% 50%;
-        animation: float 6s infinite ease-in-out;
-        opacity: 0.8;
-    }
+    /* ===== KONTAINER UTAMA ===== */
+    .container { text-align:center; z-index:10; }
+    h1 { font-size:3em; color:#fff; text-shadow:2px 2px 5px #00000088; margin-bottom:20px; }
+    p { font-size:1.5em; color:#fff; margin-bottom:20px; }
+    #countdown { font-size:2em; background:rgba(0,0,0,0.3); padding:10px 20px; border-radius:15px; display:inline-block; }
 
-    @keyframes float {
-        0% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-500px) rotate(180deg);}
-        100% { transform: translateY(0) rotate(360deg);}
-    }
+    /* ===== BUTTON ===== */
+    button { margin-top:20px; padding:12px 25px; font-size:1em; border:none; border-radius:10px; background:#ff6f91; color:white; cursor:pointer; transition:0.3s; }
+    button:hover { background:#ff4d6d; }
 
-    /* ===== KONTAINER ===== */
-    .container {
-        text-align: center;
-        z-index: 10;
-    }
-
-    h1 {
-        font-size: 3em;
-        color: #fff;
-        text-shadow: 2px 2px 5px #00000088;
-        margin-bottom: 20px;
-    }
-
-    p {
-        font-size: 1.5em;
-        color: #fff;
-        margin-bottom: 20px;
-    }
-
-    /* ===== COUNTDOWN ===== */
-    #countdown {
-        font-size: 2em;
-        background: rgba(0,0,0,0.3);
-        padding: 10px 20px;
-        border-radius: 15px;
-        display: inline-block;
-    }
-
-    /* ===== BUTTON UCAPAN ===== */
-    button {
-        margin-top: 20px;
-        padding: 12px 25px;
-        font-size: 1em;
-        border: none;
-        border-radius: 10px;
-        background: #ff6f91;
-        color: white;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-    button:hover {
-        background: #ff4d6d;
-    }
+    /* ===== POPUP BIRTHDAY ===== */
+    .birthday-popup { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; visibility:hidden; opacity:0; transition:0.3s; z-index:20; }
+    .birthday-popup.active { visibility:visible; opacity:1; }
+    .birthday-card { background:#fff; padding:30px; border-radius:20px; max-width:500px; text-align:center; color:#333; box-shadow:0 5px 20px rgba(0,0,0,0.3); }
+    .birthday-card h2 { margin-bottom:20px; }
+    .birthday-card button { background:#ff6f91; color:#fff; }
+    .birthday-card button:hover { background:#ff4d6d; }
+    #birthdayText { font-size:15px; line-height:1.6; margin-top:15px; max-height:300px; overflow-y:auto; }
+    #birthdayErrorText { color:red; margin-top:10px; display:none; }
+    #birthdayPasswordPopup input { padding:10px; width:60%; margin-top:10px; border-radius:10px; border:1px solid #ccc; }
 </style>
 </head>
 <body>
@@ -99,37 +48,88 @@
 <div class="container">
     <h1>🎉 Happy Birthday! 🎂</h1>
     <p id="countdown">Loading countdown...</p>
-    <button onclick="showMessage()">Click Me 💌</button>
+    <button onclick="showBirthdayPassword()">Open Your Special Message 💌</button>
+</div>
+
+<!-- ===== BIRTHDAY PASSWORD POPUP ===== -->
+<div class="birthday-popup" id="birthdayPasswordPopup">
+    <div class="birthday-card">
+        <h2>Enter Your Birthday Code</h2>
+        <input type="text" id="birthdayPasswordInput" placeholder="Enter code..">
+        <div id="birthdayErrorText">Wrong code, try again!</div>
+        <button onclick="checkBirthdayPassword()">Submit</button>
+    </div>
+</div>
+
+<!-- ===== BIRTHDAY MESSAGE POPUP ===== -->
+<div class="birthday-popup" id="birthdayMessagePopup">
+    <div class="birthday-card">
+        <h2>🥳 HAPPY BIRTHDAYYY 🎉</h2>
+        <div id="birthdayText"></div>
+        <button onclick="closeBirthdayPopup()">Close</button>
+    </div>
 </div>
 
 <script>
     // ===== COUNTDOWN =====
-    const birthday = new Date("2026-03-05T00:00:00").getTime(); // Ganti tanggal ulang tahun
-
+    const birthdayDateTime = new Date("2026-05-23T00:00:00").getTime(); // Ganti tanggal ulang tahun
     const countdownEl = document.getElementById("countdown");
-
     const interval = setInterval(() => {
         const now = new Date().getTime();
-        const distance = birthday - now;
-
+        const distance = birthdayDateTime - now;
         if(distance < 0){
             clearInterval(interval);
             countdownEl.innerHTML = "🎉 Today is your birthday! 🎉";
             return;
         }
-
         const days = Math.floor(distance / (1000*60*60*24));
         const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
         const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
         const seconds = Math.floor((distance % (1000*60)) / 1000);
-
         countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
     }, 1000);
 
-    // ===== UCAPAN POP-UP =====
-    function showMessage(){
-        alert("My wish for you is endless happiness, love, and laughter! 🥳💖");
+    // ===== BIRTHDAY SYSTEM =====
+    const birthdayMonth = 5;  // Mei
+    const birthdayDate = 23;  // Tanggal 23
+    const correctBirthdayPassword = "23";
+
+    const todayBirthday = new Date();
+    if(todayBirthday.getMonth()+1 === birthdayMonth && todayBirthday.getDate() === birthdayDate){
+        showBirthdayPassword(); // otomatis tampilkan popup
     }
+
+    function showBirthdayPassword(){
+        document.getElementById("birthdayPasswordPopup").classList.add("active");
+    }
+
+    function checkBirthdayPassword(){
+        const input = document.getElementById("birthdayPasswordInput").value;
+        if(input === correctBirthdayPassword){
+            document.getElementById("birthdayPasswordPopup").classList.remove("active");
+            document.getElementById("birthdayMessagePopup").classList.add("active");
+        } else {
+            document.getElementById("birthdayErrorText").style.display = "block";
+        }
+    }
+
+    function closeBirthdayPopup(){
+        document.getElementById("birthdayMessagePopup").classList.remove("active");
+    }
+
+    // ===== TEXT UCAPAN =====
+    document.getElementById("birthdayText").innerHTML =
+    "🎉 Selamat ulang tahun babyy 🎂<br><br>" +
+    "Happy Birthday, Zzoraa. On the 23rd of May, 2011, the world quietly became softer because you were born into it.<br><br>" +
+    "Some people enter this world loudly, but you… you exist like a gentle light — steady, warm, and impossible to ignore once felt.<br><br>" +
+    "Today is not just about adding another year to your life. It’s about honoring the heart you carry, the kindness you show, and the strength you hold even when things feel heavy.<br><br>" +
+    "If I could whisper a prayer into the sky for you, I would ask the universe to always be gentle with your soul.<br><br>" +
+    "In a world that can sometimes be cruel, I want to be someone who brings you peace and chooses you over and over again.<br><br>" +
+    "May this year bring growth without breaking you and happiness that feels real.<br><br>" +
+    "May your soul continue to bloom beautifully, just as it was meant to.<br><br>" +
+    "Sincerely, Nagata 🤍<br><br>" +
+    "I LOVEE YOUU BABEE 💖";
 </script>
+
 </body>
 </html>
