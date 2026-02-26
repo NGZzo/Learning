@@ -6,59 +6,31 @@
 <title>Selamat Ulang Tahun!</title>
 <style>
     /* ===== RESET & FONT ===== */
-    * { margin:0; padding:0; box-sizing:border-box; font-family:'Comic Sans MS', cursive, sans-serif; }
-    body { height:100vh; display:flex; justify-content:center; align-items:center; background: linear-gradient(135deg,#fbc2eb,#a6c1ee); overflow:hidden; position:relative; }
-
-    /* ===== BALON ===== */
-    .balloon { position:absolute; width:50px; height:70px; border-radius:50%; animation: float 6s infinite ease-in-out; opacity:0.8; }
-    @keyframes float { 0%{transform:translateY(0) rotate(0deg);} 50%{transform:translateY(-500px) rotate(180deg);} 100%{transform:translateY(0) rotate(360deg);} }
+    * { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+    body { height:100vh; display:flex; justify-content:center; align-items:center; background: #3498db; }
 
     /* ===== KONTAINER UTAMA ===== */
-    .container { text-align:center; z-index:10; }
-    h1 { font-size:3em; color:#fff; text-shadow:2px 2px 5px #00000088; margin-bottom:20px; }
-    p { font-size:1.5em; color:#fff; margin-bottom:20px; }
-    #countdown { font-size:2em; background:rgba(0,0,0,0.3); padding:10px 20px; border-radius:15px; display:inline-block; }
-
-    /* ===== BUTTON ===== */
-    button { margin-top:20px; padding:12px 25px; font-size:1em; border:none; border-radius:10px; background:#ff6f91; color:white; cursor:pointer; transition:0.3s; }
+    .container { text-align:center; }
+    h1 { font-size:3em; color:#fff; margin-bottom:20px; }
+    button { padding:12px 25px; font-size:1em; border:none; border-radius:10px; background:#ff6f91; color:white; cursor:pointer; transition:0.3s; }
     button:hover { background:#ff4d6d; }
 
     /* ===== POPUP BIRTHDAY ===== */
-    .birthday-popup { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; visibility:hidden; opacity:0; transition:0.3s; z-index:20; }
+    .birthday-popup { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; visibility:hidden; opacity:0; transition:0.3s; }
     .birthday-popup.active { visibility:visible; opacity:1; }
     .birthday-card { background:#fff; padding:30px; border-radius:20px; max-width:500px; text-align:center; color:#333; box-shadow:0 5px 20px rgba(0,0,0,0.3); }
     .birthday-card h2 { margin-bottom:20px; }
     .birthday-card button { background:#ff6f91; color:#fff; }
     .birthday-card button:hover { background:#ff4d6d; }
-    #birthdayText { font-size:15px; line-height:1.6; margin-top:15px; max-height:300px; overflow-y:auto; }
-    #birthdayErrorText { color:red; margin-top:10px; display:none; }
-    #birthdayPasswordPopup input { padding:10px; width:60%; margin-top:10px; border-radius:10px; border:1px solid #ccc; }
+    #birthdayText { font-size:16px; line-height:1.6; margin-top:15px; max-height:300px; overflow-y:auto; }
 </style>
 </head>
 <body>
 
-<!-- BALON -->
-<div class="balloon" style="left:10%; background:#ff7675;"></div>
-<div class="balloon" style="left:30%; background:#74b9ff;"></div>
-<div class="balloon" style="left:50%; background:#ffeaa7;"></div>
-<div class="balloon" style="left:70%; background:#55efc4;"></div>
-<div class="balloon" style="left:90%; background:#fd79a8;"></div>
-
 <!-- KONTAINER UTAMA -->
 <div class="container">
     <h1>🎉 Happy Birthday! 🎂</h1>
-    <p id="countdown">Loading countdown...</p>
-    <button onclick="showBirthdayPassword()">Open Your Special Message 💌</button>
-</div>
-
-<!-- ===== BIRTHDAY PASSWORD POPUP ===== -->
-<div class="birthday-popup" id="birthdayPasswordPopup">
-    <div class="birthday-card">
-        <h2>Enter Your Birthday Code</h2>
-        <input type="text" id="birthdayPasswordInput" placeholder="Enter code..">
-        <div id="birthdayErrorText">Wrong code, try again!</div>
-        <button onclick="checkBirthdayPassword()">Submit</button>
-    </div>
+    <button onclick="showBirthdayPopup()">Open Your Special Message 💌</button>
 </div>
 
 <!-- ===== BIRTHDAY MESSAGE POPUP ===== -->
@@ -71,53 +43,15 @@
 </div>
 
 <script>
-    // ===== COUNTDOWN =====
-    const birthdayDateTime = new Date("2026-02-27T00:00:00").getTime(); // Ganti tanggal ulang tahun
-    const countdownEl = document.getElementById("countdown");
-    const interval = setInterval(() => {
-        const now = new Date().getTime();
-        const distance = birthdayDateTime - now;
-        if(distance < 0){
-            clearInterval(interval);
-            countdownEl.innerHTML = "🎉 Today is your birthday! 🎉";
-            return;
-        }
-        const days = Math.floor(distance / (1000*60*60*24));
-        const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
-        const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
-        const seconds = Math.floor((distance % (1000*60)) / 1000);
-        countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-    }, 1000);
-
-    // ===== BIRTHDAY SYSTEM =====
-    const birthdayMonth = 2;  // Mei
-    const birthdayDate = 27;  // Tanggal 23
-    const correctBirthdayPassword = "23";
-
-    const todayBirthday = new Date();
-    if(todayBirthday.getMonth()+1 === birthdayMonth && todayBirthday.getDate() === birthdayDate){
-        showBirthdayPassword(); // otomatis tampilkan popup
-    }
-
-    function showBirthdayPassword(){
-        document.getElementById("birthdayPasswordPopup").classList.add("active");
-    }
-
-    function checkBirthdayPassword(){
-        const input = document.getElementById("birthdayPasswordInput").value;
-        if(input === correctBirthdayPassword){
-            document.getElementById("birthdayPasswordPopup").classList.remove("active");
-            document.getElementById("birthdayMessagePopup").classList.add("active");
-        } else {
-            document.getElementById("birthdayErrorText").style.display = "block";
-        }
+    function showBirthdayPopup(){
+        document.getElementById("birthdayMessagePopup").classList.add("active");
     }
 
     function closeBirthdayPopup(){
         document.getElementById("birthdayMessagePopup").classList.remove("active");
     }
 
-    // ===== TEXT UCAPAN =====
+    // ===== TEKS UCAPAN =====
     document.getElementById("birthdayText").innerHTML =
     "🎉 Selamat ulang tahun babyy 🎂<br><br>" +
     "Happy Birthday, Zzoraa. On the 23rd of May, 2011, the world quietly became softer because you were born into it.<br><br>" +
