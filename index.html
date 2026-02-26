@@ -1,69 +1,92 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Selamat Ulang Tahun!</title>
+<!-- Popup HTML -->
+<div id="mystery-popup" style="display:none;">
+  <div class="popup-content">
+    <h2>🎉 Surprise! 🎉</h2>
+    <p>Something mysterious is happening today… 👀</p>
+    <button id="close-popup">Close</button>
+  </div>
+</div>
+
 <style>
-    /* ===== RESET & FONT ===== */
-    * { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
-    body { height:100vh; display:flex; justify-content:center; align-items:center; background: #3498db; }
+/* Popup overlay */
+#mystery-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.5s ease;
+}
 
-    /* ===== KONTAINER UTAMA ===== */
-    .container { text-align:center; }
-    h1 { font-size:3em; color:#fff; margin-bottom:20px; }
-    button { padding:12px 25px; font-size:1em; border:none; border-radius:10px; background:#ff6f91; color:white; cursor:pointer; transition:0.3s; }
-    button:hover { background:#ff4d6d; }
+/* Popup content */
+.popup-content {
+  background: #fff;
+  color: #333;
+  padding: 30px 50px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  max-width: 400px;
+  font-family: Arial, sans-serif;
+  animation: popupScale 0.5s ease;
+}
 
-    /* ===== POPUP BIRTHDAY ===== */
-    .birthday-popup { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; visibility:hidden; opacity:0; transition:0.3s; }
-    .birthday-popup.active { visibility:visible; opacity:1; }
-    .birthday-card { background:#fff; padding:30px; border-radius:20px; max-width:500px; text-align:center; color:#333; box-shadow:0 5px 20px rgba(0,0,0,0.3); }
-    .birthday-card h2 { margin-bottom:20px; }
-    .birthday-card button { background:#ff6f91; color:#fff; }
-    .birthday-card button:hover { background:#ff4d6d; }
-    #birthdayText { font-size:16px; line-height:1.6; margin-top:15px; max-height:300px; overflow-y:auto; }
+.popup-content h2 {
+  margin-bottom: 15px;
+}
+
+.popup-content p {
+  margin-bottom: 20px;
+}
+
+.popup-content button {
+  padding: 10px 20px;
+  border: none;
+  background: #ff4c4c;
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.popup-content button:hover {
+  background: #ff1c1c;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes popupScale {
+  from {transform: scale(0);}
+  to {transform: scale(1);}
+}
 </style>
-</head>
-<body>
-
-<!-- KONTAINER UTAMA -->
-<div class="container">
-    <h1>🎉 Happy Birthday! 🎂</h1>
-    <button onclick="showBirthdayPopup()">Open Your Special Message 💌</button>
-</div>
-
-<!-- ===== BIRTHDAY MESSAGE POPUP ===== -->
-<div class="birthday-popup" id="birthdayMessagePopup">
-    <div class="birthday-card">
-        <h2>🥳 HAPPY BIRTHDAYYY 🎉</h2>
-        <div id="birthdayText"></div>
-        <button onclick="closeBirthdayPopup()">Close</button>
-    </div>
-</div>
 
 <script>
-    function showBirthdayPopup(){
-        document.getElementById("birthdayMessagePopup").classList.add("active");
-    }
+// Tentukan tanggal misterius (YYYY, MM-1, DD)
+const mysteryDate = new Date(2026, 1, 27); // 27 Februari 2026
 
-    function closeBirthdayPopup(){
-        document.getElementById("birthdayMessagePopup").classList.remove("active");
-    }
+// Ambil tanggal hari ini
+const today = new Date();
 
-    // ===== TEKS UCAPAN =====
-    document.getElementById("birthdayText").innerHTML =
-    "🎉 Selamat ulang tahun babyy 🎂<br><br>" +
-    "Happy Birthday, Zzoraa. On the 23rd of May, 2011, the world quietly became softer because you were born into it.<br><br>" +
-    "Some people enter this world loudly, but you… you exist and impossible to ignore once felt.<br><br>" +
-    "Today is not just about adding another year to your life. There is new journey Wait for you, waiting us. and it’s about honoring the heart you carry, the kindness you show, and the strength you hold even when things feel heavy.<br><br>" +
-    "If I could whisper a prayer into the sky for you, I would ask the universe to always be gentle with your soul.<br><br>" +
-    "In a world that can sometimes be cruel, I want to be someone who brings you peace and chooses you over and over again.<br><br>" +
-    "May this year bring growth without breaking you and happiness that feels real.<br><br>" +
-    "May your soul continue to bloom beautifully, just as it was meant to.<br><br>" +
-    "Sincerely, Nagata 🤍<br><br>" +
-    "I LOVEE YOUU BABEE 💖";
+// Cek apakah hari ini tanggal misterius
+if (
+  today.getFullYear() === mysteryDate.getFullYear() &&
+  today.getMonth() === mysteryDate.getMonth() &&
+  today.getDate() === mysteryDate.getDate()
+) {
+  document.getElementById("mystery-popup").style.display = "flex";
+}
+
+// Tutup popup
+document.getElementById("close-popup").onclick = () => {
+  document.getElementById("mystery-popup").style.display = "none";
+};
 </script>
-
-</body>
-</html>
