@@ -3,181 +3,193 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Memory Keeper</title>
+<title>Love Counter</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
-body{background:linear-gradient(to right,#87ceeb,#b0e0ff);}
-
-/* NAVBAR */
-nav{background:white;display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;box-shadow:0 4px 15px rgba(0,0,0,0.08);position:sticky;top:0;z-index:1000;}
-.logo{display:flex;align-items:center;gap:10px;}
-.logo img{width:45px;height:45px;border-radius:50%;object-fit:cover;}
-.logo a{text-decoration:none;font-weight:bold;font-size:18px;color:#2c5364;}
-nav ul{display:flex;gap:1.8rem;list-style:none;}
-nav ul li a{text-decoration:none;color:#333;font-weight:600;position:relative;transition:0.3s;}
-nav ul li a::after{content:"";position:absolute;width:0;height:2px;left:0;bottom:-5px;background:#2c5364;transition:0.3s;}
-nav ul li a:hover::after{width:100%;}
-.menu-toggle{display:none;flex-direction:column;cursor:pointer;}
-.menu-toggle div{width:25px;height:3px;background:#333;margin:4px 0;}
-
-@media(max-width:768px){
-nav ul{position:absolute;top:70px;right:0;background:white;flex-direction:column;width:220px;text-align:center;padding:20px 0;display:none;box-shadow:0 10px 25px rgba(0,0,0,0.1);border-radius:0 0 0 15px;}
-nav ul.active{display:flex;}
-nav ul li{padding:10px 0;}
-.menu-toggle{display:flex;}
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+text-align:center;
 }
 
-/* CONTENT */
-.container{padding:40px 20px;text-align:center;color:white;}
-.love-day-box{margin-top:25px;background:rgba(255,255,255,0.15);backdrop-filter:blur(12px);padding:25px;border-radius:25px;display:inline-block;box-shadow:0 10px 25px rgba(0,0,0,0.15);}
-.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
-.time-box{background:rgba(255,255,255,0.25);padding:12px;border-radius:15px;}
-.time-box span{display:block;font-size:20px;font-weight:bold;}
-.time-box small{font-size:11px;}
+/* LOVE TIMER */
+.love-timer{
+margin-top:100px;
+font-size:22px;
+}
 
-/* NOTES */
-.notes-wrapper{max-width:600px;margin:60px auto;background:white;padding:25px;border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,0.1);}
-.notes-wrapper h2{text-align:center;margin-bottom:20px;color:#ff7aa2;}
-.love-counter{display:flex;justify-content:space-between;margin-bottom:20px;gap:10px;}
-.counter-box{flex:1;padding:10px;border-radius:12px;text-align:center;font-weight:bold;font-size:14px;}
-.nagata-counter{background:#ffe5e5;color:#ff1a1a;}
-.zzoraa-counter{background:#e0f7ff;color:#0077b6;}
-.note-input{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;}
-.note-input select,.note-input input{flex:1;min-width:120px;padding:10px;border-radius:10px;border:1px solid #ddd;}
-.note-input button{padding:10px 16px;border:none;background:linear-gradient(to right,#ff7aa2,#ff4f81);color:white;border-radius:10px;cursor:pointer;font-weight:bold;}
-#notesContainer{display:flex;flex-direction:column;gap:15px;}
-.note-card{padding:15px;border-radius:15px;}
-.note-card.nagata{background:#ffe5e5;border-left:6px solid #ff1a1a;}
-.note-card.zzoraa{background:#e0f7ff;border-left:6px solid #4dc3ff;}
-.note-date{font-size:11px;color:gray;}
+.time-box{
+font-size:28px;
+margin-top:10px;
+}
 
 /* POPUP */
-.popup-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;z-index:9999;}
-.popup-box{background:white;padding:30px;border-radius:25px;text-align:center;max-width:350px;animation:popupScale 0.4s ease;box-shadow:0 10px 30px rgba(0,0,0,0.2);}
-.popup-box h2{color:#ff4f81;margin-bottom:10px;}
-.popup-box p{margin-bottom:20px;white-space:pre-line;}
-.popup-box button{padding:8px 18px;border:none;border-radius:20px;background:linear-gradient(to right,#ff7aa2,#ff4f81);color:white;cursor:pointer;font-weight:bold;}
-@keyframes popupScale{from{transform:scale(0.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+.popup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:1000;
+}
 
-footer{text-align:center;padding:20px;background:#eee;font-size:14px;color:#555;}
+.popup-content{
+background:white;
+color:black;
+padding:25px;
+border-radius:15px;
+width:85%;
+max-width:400px;
+text-align:center;
+animation:fadeIn 0.4s ease;
+}
+
+.popup-content h2{
+margin-bottom:10px;
+}
+
+.popup-content button{
+margin-top:15px;
+padding:8px 15px;
+border:none;
+background:#ff4d6d;
+color:white;
+border-radius:8px;
+cursor:pointer;
+}
+
+/* BUTTON OPEN AGAIN */
+.reopen-btn{
+position:fixed;
+bottom:20px;
+right:20px;
+padding:10px 15px;
+background:#ff4d6d;
+border:none;
+border-radius:20px;
+color:white;
+cursor:pointer;
+box-shadow:0 5px 15px rgba(0,0,0,0.3);
+}
+
+@keyframes fadeIn{
+from{transform:scale(0.8);opacity:0;}
+to{transform:scale(1);opacity:1;}
+}
+
 </style>
 </head>
-
 <body>
 
-<nav>
-<div class="logo">
-<img src="Z.jpg">
-<a href="#">Memory Keeper</a>
-</div>
-<ul id="nav-links">
-<li><a href="https://www.instagram.com/">Instagram</a></li>
-<li><a href="video.html">Video</a></li>
-<li><a href="photo.html">Photo</a></li>
-<li><a href="music.html">Music</a></li>
-</ul>
-<div class="menu-toggle" onclick="toggleMenu()">
-<div></div><div></div><div></div>
-</div>
-</nav>
-
-<div class="container">
-<h1>Welcome to the Memory Keeper</h1>
-<h2>Our Memories in a Box</h2>
-
-<div class="love-day-box">
-<h3>Sudah bersama selama</h3>
-<div class="time-grid">
-<div class="time-box"><span id="days">0</span><small>Hari</small></div>
-<div class="time-box"><span id="hours">0</span><small>Jam</small></div>
-<div class="time-box"><span id="minutes">0</span><small>Menit</small></div>
-<div class="time-box"><span id="seconds">0</span><small>Detik</small></div>
-</div>
+<div class="love-timer">
+<h1>We Have Been Together 💙</h1>
+<div class="time-box">
+<span id="days">0</span> Days 
+<span id="hours">0</span> Hours 
+<span id="minutes">0</span> Minutes 
+<span id="seconds">0</span> Seconds
 </div>
 </div>
 
-<div class="notes-wrapper">
-<h2>💖 Our Love Notes</h2>
-<div class="love-counter">
-<div class="counter-box nagata-counter">❤️ Nagata: <span id="nagataCount">0</span></div>
-<div class="counter-box zzoraa-counter">💙 Zzoraa: <span id="zzoraaCount">0</span></div>
-</div>
-<div class="note-input">
-<select id="noteAuthor">
-<option value="nagata">Nagata ❤️</option>
-<option value="zzoraa">Zzoraa 💙</option>
-</select>
-<input type="password" id="notePassword" placeholder="Password">
-<input type="text" id="noteText" placeholder="Tulis sesuatu yahh babyy">
-<button onclick="addNote()">Add</button>
-</div>
-<div id="notesContainer"></div>
-</div>
-
-<div class="popup-overlay" id="annivPopup">
-<div class="popup-box">
+<!-- POPUP -->
+<div class="popup" id="annivPopup">
+<div class="popup-content">
 <h2 id="popupTitle"></h2>
 <p id="popupMessage"></p>
-<button onclick="closePopup()">Close ❤️</button>
+<button onclick="closePopup()">Close 💕</button>
 </div>
 </div>
 
-<footer>This is Nagata who loves Zzoraa very much :3</footer>
+<!-- BUTTON REOPEN -->
+<button class="reopen-btn" onclick="openAgain()">🎉 Open Special Day</button>
 
 <script>
-function toggleMenu(){document.getElementById("nav-links").classList.toggle("active");}
 
-/* LOVE TIMER */
-const startDate=new Date("2025-02-26T01:43:00");
+/* ====== GANTI TANGGAL DISINI ====== */
+const startDate = new Date("2025-02-26T01:45:00");
+
+/* ====== LOVE TIMER ====== */
 function updateLoveTime(){
 const now=new Date();
 const diff=now-startDate;
+
 document.getElementById("days").textContent=Math.floor(diff/(1000*60*60*24));
 document.getElementById("hours").textContent=Math.floor((diff/(1000*60*60))%24);
 document.getElementById("minutes").textContent=Math.floor((diff/(1000*60))%60);
 document.getElementById("seconds").textContent=Math.floor((diff/1000)%60);
 }
-setInterval(updateLoveTime,1000);updateLoveTime();
+setInterval(updateLoveTime,1000);
+updateLoveTime();
 
-/* ANNIVERSARY & MENSIVERSARY */
+/* ====== ANNIVERSARY SYSTEM ====== */
 const annivDay=startDate.getDate();
-const annivMonth=startDate.getMonth()+1;
+const annivMonth=startDate.getMonth();
 const today=new Date();
 const todayKey=today.toDateString();
 
-if(localStorage.getItem("specialPopupShown")!==todayKey){
+let specialTitle="";
+let specialMessage="";
 
-if(today.getDate()===annivDay && today.getMonth()+1===annivMonth){
+function checkSpecialDay(){
+
+if(today.getDate()===annivDay && today.getMonth()===annivMonth){
+
 const years=today.getFullYear()-startDate.getFullYear();
+
 if(years>=1){
-document.getElementById("popupTitle").innerText="🎉 Happy Anniversary babyy :3";
-document.getElementById("popupMessage").innerText=
-`Akhirnya kita sudah ${years} tahun bersama yayyy 💖
-Terimakasih sudah bertahan sejauh ini.
-Dont leave me alone yaa babee, i will always love you.
-Semoga kita terus kuat dan bahagia until we grey and old.
+specialTitle="🎉 Happy Anniversary babyy :3";
+specialMessage=`Akhirnya kita sudah ${years} tahun bersama 💖
+Terima kasih sudah bertahan sejauh ini.
 I LOVEE YOUU BABEEE <3`;
-document.getElementById("annivPopup").style.display="flex";
-localStorage.setItem("specialPopupShown",todayKey);
+
+showPopup();
 }
-}
-else if(today.getDate()===annivDay){
-const months=(today.getFullYear()-startDate.getFullYear())*12+(today.getMonth()-startDate.getMonth());
+
+}else if(today.getDate()===annivDay){
+
+const months=(today.getFullYear()-startDate.getFullYear())*12+
+(today.getMonth()-startDate.getMonth());
+
 if(months>=1){
-document.getElementById("popupTitle").innerText="💕 Happy Mensiversary babeee :3";
-document.getElementById("popupMessage").innerText=
-`Babyy kita sudah ${months} bulan bersama hehehehe :3
-I LOVEE YOUH SO MUCHH BABEE 💙`;
+specialTitle="💕 Happy Mensiversary babeee :3";
+specialMessage=`Babyy kita sudah ${months} bulan bersama hehehe :3
+I LOVEE YOUH SO MUCHH 💙`;
+
+showPopup();
+}
+}
+}
+
+function showPopup(){
+document.getElementById("popupTitle").innerText=specialTitle;
+document.getElementById("popupMessage").innerText=specialMessage;
 document.getElementById("annivPopup").style.display="flex";
 localStorage.setItem("specialPopupShown",todayKey);
-}
-}
 }
 
 function closePopup(){
 document.getElementById("annivPopup").style.display="none";
 }
+
+function openAgain(){
+if(specialTitle!==""){
+showPopup();
+}else{
+alert("Hari ini bukan Anniversary / Mensiversary yaa 💙");
+}
+}
+
+/* AUTO SHOW ON LOAD */
+if(localStorage.getItem("specialPopupShown")!==todayKey){
+checkSpecialDay();
+}
+
 </script>
 
 </body>
