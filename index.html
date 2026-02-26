@@ -1,268 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Love Counter</title>
-
+<title>Selamat Ulang Tahun!</title>
 <style>
-body{
-margin:0;
-font-family:Arial, sans-serif;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-color:white;
-text-align:center;
-}
+    /* ===== FONT & RESET ===== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+    }
 
-/* LOVE TIMER */
-.love-timer{
-margin-top:100px;
-font-size:22px;
-}
+    body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+        overflow: hidden;
+        position: relative;
+    }
 
-.time-box{
-font-size:28px;
-margin-top:10px;
-}
+    /* ===== BALON DAN CONFETTI ===== */
+    .balloon {
+        position: absolute;
+        width: 50px;
+        height: 70px;
+        background: red;
+        border-radius: 50% 50% 50% 50%;
+        animation: float 6s infinite ease-in-out;
+        opacity: 0.8;
+    }
 
-/* POPUP */
-.popup{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.6);
-display:none;
-justify-content:center;
-align-items:center;
-z-index:1000;
-}
+    @keyframes float {
+        0% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-500px) rotate(180deg);}
+        100% { transform: translateY(0) rotate(360deg);}
+    }
 
-.popup-content{
-background:white;
-color:black;
-padding:25px;
-border-radius:15px;
-width:85%;
-max-width:400px;
-text-align:center;
-animation:fadeIn 0.4s ease;
-}
+    /* ===== KONTAINER ===== */
+    .container {
+        text-align: center;
+        z-index: 10;
+    }
 
-.popup-content h2{
-margin-bottom:10px;
-}
+    h1 {
+        font-size: 3em;
+        color: #fff;
+        text-shadow: 2px 2px 5px #00000088;
+        margin-bottom: 20px;
+    }
 
-.popup-content button{
-margin-top:15px;
-padding:8px 15px;
-border:none;
-background:#ff4d6d;
-color:white;
-border-radius:8px;
-cursor:pointer;
-}
+    p {
+        font-size: 1.5em;
+        color: #fff;
+        margin-bottom: 20px;
+    }
 
-/* PASSWORD INPUT */
-.popup-content input{
-width:100%;
-padding:10px;
-margin-top:10px;
-border-radius:8px;
-border:1px solid #ccc;
-outline:none;
-}
+    /* ===== COUNTDOWN ===== */
+    #countdown {
+        font-size: 2em;
+        background: rgba(0,0,0,0.3);
+        padding: 10px 20px;
+        border-radius: 15px;
+        display: inline-block;
+    }
 
-.error-text{
-color:red;
-font-size:13px;
-display:none;
-margin-top:8px;
-}
+    /* ===== BUTTON UCAPAN ===== */
+    button {
+        margin-top: 20px;
+        padding: 12px 25px;
+        font-size: 1em;
+        border: none;
+        border-radius: 10px;
+        background: #ff6f91;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s;
+    }
 
-/* BUTTON OPEN AGAIN */
-.reopen-btn{
-position:fixed;
-bottom:20px;
-right:20px;
-padding:10px 15px;
-background:#ff4d6d;
-border:none;
-border-radius:20px;
-color:white;
-cursor:pointer;
-box-shadow:0 5px 15px rgba(0,0,0,0.3);
-}
-
-@keyframes fadeIn{
-from{transform:scale(0.8);opacity:0;}
-to{transform:scale(1);opacity:1;}
-}
+    button:hover {
+        background: #ff4d6d;
+    }
 </style>
 </head>
 <body>
 
-<div class="love-timer">
-<h1>We Have Been Together 💙</h1>
-<div class="time-box">
-<span id="days">0</span> Days 
-<span id="hours">0</span> Hours 
-<span id="minutes">0</span> Minutes 
-<span id="seconds">0</span> Seconds
-</div>
-</div>
+<!-- BALON -->
+<div class="balloon" style="left:10%; background:#ff7675;"></div>
+<div class="balloon" style="left:30%; background:#74b9ff;"></div>
+<div class="balloon" style="left:50%; background:#ffeaa7;"></div>
+<div class="balloon" style="left:70%; background:#55efc4;"></div>
+<div class="balloon" style="left:90%; background:#fd79a8;"></div>
 
-<!-- ANNIVERSARY POPUP -->
-<div class="popup" id="annivPopup">
-<div class="popup-content">
-<h2 id="popupTitle"></h2>
-<p id="popupMessage"></p>
-<button onclick="closePopup()">Close 💕</button>
+<!-- KONTAINER UTAMA -->
+<div class="container">
+    <h1>🎉 Happy Birthday! 🎂</h1>
+    <p id="countdown">Loading countdown...</p>
+    <button onclick="showMessage()">Click Me 💌</button>
 </div>
-</div>
-
-<!-- BIRTHDAY PASSWORD POPUP -->
-<div class="popup" id="birthdayPasswordPopup">
-<div class="popup-content">
-<h2>🎂 Birthday Access</h2>
-<p>Masukkan password dulu yaa babyy 😝</p>
-<input type="password" id="birthdayPasswordInput" placeholder="Enter password...">
-<div class="error-text" id="passwordError">Password salahhh 😜</div>
-<button onclick="checkBirthdayPassword()">Unlock 🎁</button>
-</div>
-</div>
-
-<!-- BIRTHDAY MESSAGE POPUP -->
-<div class="popup" id="birthdayMessagePopup">
-<div class="popup-content">
-<h2>🥳 HAPPY BIRTHDAYYY MY BABYYY 🎉</h2>
-<p>
-Selamat ulang tahun cintakuuu 💖✨<br><br>
-Semoga panjang umur, sehat selalu,  
-rezekinya lancar, makin glow up,  
-dan makin sayang sama aku tiap hari 😆💙<br><br>
-Hari ini kamu naik level yaa 🎮⬆️  
-Jangan lupa traktir pacarmu ini 😜
-</p>
-<button onclick="closeBirthday()">Close 💕</button>
-</div>
-</div>
-
-<!-- BUTTON REOPEN -->
-<button class="reopen-btn" onclick="openAgain()">🎉 Open Special Day</button>
 
 <script>
+    // ===== COUNTDOWN =====
+    const birthday = new Date("2026-03-05T00:00:00").getTime(); // Ganti tanggal ulang tahun
 
-/* ====== GANTI TANGGAL JADIAN ====== */
-const startDate = new Date("2025-02-26T01:50:00");
+    const countdownEl = document.getElementById("countdown");
 
-/* ====== SET TANGGAL ULANG TAHUN ====== */
-const birthdayMonth = 2;  // Ganti bulan (1-12)
-const birthdayDate = 26;  // Ganti tanggal
-const birthdayPassword = "2325"; // Ganti password
+    const interval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = birthday - now;
 
-/* ====== LOVE TIMER ====== */
-function updateLoveTime(){
-const now=new Date();
-const diff=now-startDate;
+        if(distance < 0){
+            clearInterval(interval);
+            countdownEl.innerHTML = "🎉 Today is your birthday! 🎉";
+            return;
+        }
 
-document.getElementById("days").textContent=Math.floor(diff/(1000*60*60*24));
-document.getElementById("hours").textContent=Math.floor((diff/(1000*60*60))%24);
-document.getElementById("minutes").textContent=Math.floor((diff/(1000*60))%60);
-document.getElementById("seconds").textContent=Math.floor((diff/1000)%60);
-}
-setInterval(updateLoveTime,1000);
-updateLoveTime();
+        const days = Math.floor(distance / (1000*60*60*24));
+        const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
+        const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
+        const seconds = Math.floor((distance % (1000*60)) / 1000);
 
-/* ====== ANNIVERSARY SYSTEM ====== */
-let specialTitle="";
-let specialMessage="";
-let lastShownDate="";
+        countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }, 1000);
 
-function checkSpecialDay(){
-
-const today = new Date();
-const todayKey = today.toDateString();
-const annivDay = startDate.getDate();
-const annivMonth = startDate.getMonth();
-
-if(lastShownDate === todayKey) return;
-
-if(today.getDate()===annivDay && today.getMonth()===annivMonth){
-
-const years=today.getFullYear()-startDate.getFullYear();
-
-if(years>=1){
-specialTitle="🎉 Happy Anniversary babyy :3";
-specialMessage=`Akhirnya kita sudah ${years} tahun bersama 💖
-Terima kasih sudah bertahan sejauh ini.
-I LOVEE YOUU BABEEE <3`;
-showPopup();
-lastShownDate=todayKey;
-}
-
-}else if(today.getDate()===annivDay){
-
-const months=(today.getFullYear()-startDate.getFullYear())*12+
-(today.getMonth()-startDate.getMonth());
-
-if(months>=1){
-specialTitle="💕 Happy Mensiversary babeee :3";
-specialMessage=`Babyy kita sudah ${months} bulan bersama hehehe :3
-I LOVEE YOUH SO MUCHH 💙`;
-showPopup();
-lastShownDate=todayKey;
-}
-}
-}
-
-function showPopup(){
-document.getElementById("popupTitle").innerText=specialTitle;
-document.getElementById("popupMessage").innerText=specialMessage;
-document.getElementById("annivPopup").style.display="flex";
-}
-
-function closePopup(){
-document.getElementById("annivPopup").style.display="none";
-}
-
-function openAgain(){
-if(specialTitle!==""){
-showPopup();
-}else{
-alert("Hari ini bukan Anniversary / Mensiversary yaa 💙");
-}
-}
-
-setInterval(checkSpecialDay,60000);
-checkSpecialDay();
-
-/* ====== BIRTHDAY SYSTEM ====== */
-function checkBirthday(){
-const today=new Date();
-if(today.getMonth()+1===birthdayMonth && today.getDate()===birthdayDate){
-document.getElementById("birthdayPasswordPopup").style.display="flex";
-}
-}
-
-function checkBirthdayPassword(){
-const input=document.getElementById("birthdayPasswordInput").value;
-if(input===birthdayPassword){
-document.getElementById("birthdayPasswordPopup").style.display="none";
-document.getElementById("birthdayMessagePopup").style.display="flex";
-}else{
-document.getElementById("passwordError").style.display="block";
-}
-}
-
-function closeBirthday(){
-document.getElementById("birthdayMessagePopup").style.display="none";
-}
-
-checkBirthday();
-
+    // ===== UCAPAN POP-UP =====
+    function showMessage(){
+        alert("My wish for you is endless happiness, love, and laughter! 🥳💖");
+    }
 </script>
-
 </body>
 </html>
